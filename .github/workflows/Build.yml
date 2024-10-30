@@ -9,12 +9,13 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true  # 强制使用 Node20
 
     steps:
-    - uses: actions/checkout@v4  # 更新为 v4
-
+    - uses: actions/checkout@v4  # 最新版本，支持 Node20
     - name: Set up Python
-      uses: actions/setup-python@v4  # 更新为 v4
+      uses: actions/setup-python@v4
       with:
         python-version: '3.9'
 
