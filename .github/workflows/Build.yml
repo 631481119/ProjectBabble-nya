@@ -11,32 +11,27 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v2
+    - uses: actions/checkout@v4  # 更新为 v4
 
-    # 设置 Python 环境
     - name: Set up Python
-      uses: actions/setup-python@v2
+      uses: actions/setup-python@v4  # 更新为 v4
       with:
         python-version: '3.9'
 
-    # 安装依赖（使用 poetry 或直接用 pip）
     - name: Install dependencies
       run: |
         pip install poetry
         poetry install
 
-    # 使用 PyInstaller 打包 EXE 文件
     - name: Package Application
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
         path: BabbleApp
-        args: --onefile BabbleApp/babbleapp.py  # 指定 babbleapp.py 为入口文件
+        args: --onefile BabbleApp/babbleapp.py
 
-    # 列出输出目录的内容，检查是否生成了 EXE 文件
     - name: List output directory
       run: ls -R BabbleApp/dist
 
-    # 上传 EXE 文件作为 GitHub Artifact
     - uses: actions/upload-artifact@v4
       with:
         name: BabbleApp
