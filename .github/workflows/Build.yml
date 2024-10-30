@@ -1,4 +1,4 @@
-name: Package Application with PyInstaller
+name: Package Application with Pyinstaller
 
 on:
   push:
@@ -8,32 +8,18 @@ on:
 
 jobs:
   build:
+
     runs-on: ubuntu-latest
-    env:
-      FORCE_JAVASCRIPT_ACTIONS_TO_NODE20: true  # 强制使用 Node20
 
     steps:
-    - uses: actions/checkout@v4  # 最新版本，支持 Node20
-    - name: Set up Python
-      uses: actions/setup-python@v4
-      with:
-        python-version: '3.9'
-
-    - name: Install dependencies
-      run: |
-        pip install poetry
-        poetry install
+    - uses: actions/checkout@v2
 
     - name: Package Application
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
         path: BabbleApp
-        args: --onefile BabbleApp/babbleapp.py
-
-    - name: List output directory
-      run: ls -R BabbleApp/dist
 
     - uses: actions/upload-artifact@v4
       with:
         name: BabbleApp
-        path: BabbleApp/dist
+        path: BabbleApp/dist/windows
