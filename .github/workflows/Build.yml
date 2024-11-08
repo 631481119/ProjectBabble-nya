@@ -9,7 +9,7 @@ on:
 jobs:
   build:
 
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # 改成 Windows 环境
 
     steps:
     - uses: actions/checkout@v2
@@ -17,9 +17,9 @@ jobs:
     - name: Package Application
       uses: JackMcKew/pyinstaller-action-windows@main
       with:
-        path: BabbleApp
+        path: BabbleApp  # 指定项目文件路径
 
     - uses: actions/upload-artifact@v4
       with:
         name: BabbleApp
-        path: BabbleApp/dist/windows
+        path: BabbleApp/dist/windows  # 检查路径是否正确，确保上传到 artifacts
