@@ -8,18 +8,34 @@ on:
 
 jobs:
   build:
-
-    runs-on: ubuntu-latest
+    runs-on: windows-latest  # 使用 Windows 环境
 
     steps:
-    - uses: actions/checkout@v2
+      # 检出代码
+      - name: Check out code
+        uses: actions/checkout@v2
 
-    - name: Package Application
-      uses: JackMcKew/pyinstaller-action-windows@main
-      with:
-        path: BabbleApp
+      # 设置 Python 环境
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.x'  # 根据需要选择 Python 版本
 
-    - uses: actions/upload-artifact@v4
-      with:
-        name: BabbleApp
-        path: BabbleApp/dist/windows
+      # 安装依赖
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install pyinstaller
+          pip install -r BabbleApp/requirements.txt  # 确保 requirements.txt 文件在指定位置
+
+      # 使用 PyInstaller 打包应用程序
+      - name: Package Application
+        run: |
+          pyinstaller BabbleApp/main.py --onefile --distpath BabbleApp/dist/windows  # 将 main.py 改为你的主入口文件
+
+      # 上传打包生成的文件
+      - name: Upload artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: BabbleApp
+          path: BabbleApp/dist/windows  # 确保路径正确，与 pyinstaller 命令中的 distpath 一致
