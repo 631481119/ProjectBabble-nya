@@ -36,7 +36,11 @@ jobs:
       # 生成安装包
       - name: Create Installer
         run: |
-          & "C:\Program Files (x86)\Inno Setup 6\ISCC.exe" "installer_script.iss"
+          $innoPath = (Get-Command "ISCC.exe" -ErrorAction SilentlyContinue).Path
+          if (-not $innoPath) {
+              throw "Inno Setup ISCC.exe not found"
+          }
+          & $innoPath "installer_script.iss"
 
       - name: Create Release
         id: create_release
