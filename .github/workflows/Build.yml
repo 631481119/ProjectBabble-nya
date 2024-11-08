@@ -8,7 +8,7 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest  # 使用 Windows 环境
+    runs-on: windows-latest  # 改为 Windows 环境
 
     steps:
       # 检出代码
@@ -31,7 +31,7 @@ jobs:
       # 使用 PyInstaller 打包应用程序
       - name: Package Application
         run: |
-          pyinstaller BabbleApp/main.py --onefile --distpath BabbleApp/dist/windows  # 将 main.py 改为你的主入口文件
+          pyinstaller BabbleApp/main.py --onefile --distpath BabbleApp/dist/windows  # 替换 main.py 为实际入口文件
 
       # 上传打包生成的文件
       - name: Upload artifact
