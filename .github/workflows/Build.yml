@@ -8,27 +8,18 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+
+    runs-on: ubuntu-latest
 
     steps:
     - uses: actions/checkout@v2
 
-    - name: Set up Python
-      uses: actions/setup-python@v2
-      with:
-        python-version: '3.x'  # 设置所需的 Python 版本
-
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install pyinstaller
-        pip install -r BabbleApp/requirements.txt  # 安装项目依赖，确保路径和文件名正确
-
     - name: Package Application
-      run: |
-        pyinstaller BabbleApp/main.py --onefile --distpath BabbleApp/dist/windows  # 替换为实际主文件路径，确保生成在指定路径
+      uses: JackMcKew/pyinstaller-action-windows@main
+      with:
+        path: BabbleApp
 
-    - uses: actions/upload-artifact@v3
+    - uses: actions/upload-artifact@v4
       with:
         name: BabbleApp
-        path: BabbleApp/dist/windows  # 确认打包文件路径
+        path: BabbleApp/dist/windows
