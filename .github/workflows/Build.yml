@@ -33,14 +33,21 @@ jobs:
       - name: Install Inno Setup
         run: choco install innosetup --yes
 
+      # 检查并设置 Inno Setup 路径
+      - name: Verify Inno Setup Path
+        run: |
+          $innoPath = "C:\Program Files (x86)\Inno Setup 6\ISCC.exe"
+          if (Test-Path $innoPath) {
+              Write-Host "Inno Setup found at $innoPath"
+              $env:Path += ";C:\Program Files (x86)\Inno Setup 6"
+          } else {
+              throw "Inno Setup ISCC.exe not found in expected location."
+          }
+
       # 生成安装包
       - name: Create Installer
         run: |
-          $innoPath = (Get-Command "ISCC.exe" -ErrorAction SilentlyContinue).Path
-          if (-not $innoPath) {
-              throw "Inno Setup ISCC.exe not found"
-          }
-          & $innoPath "installer_script.iss"
+          ISCC.exe "installer_script.iss"
 
       - name: Create Release
         id: create_release
