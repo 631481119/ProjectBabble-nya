@@ -29,13 +29,12 @@ jobs:
         run: |
           pyinstaller BabbleApp/babbleapp.py --onefile --distpath BabbleApp/dist/windows
 
-      # 上传打包生成的文件作为 Release 资产
       - name: Create Release
         id: create_release
         uses: actions/create-release@v1
         with:
-          tag_name: v1.0.0  # 指定 tag，可以根据项目版本更改
-          release_name: Release v1.0.0  # Release 名称
+          tag_name: v1.0.0
+          release_name: Release v1.0.0
           draft: false
           prerelease: false
         env:
@@ -45,6 +44,8 @@ jobs:
         uses: actions/upload-release-asset@v1
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: BabbleApp/dist/windows/babbleapp.exe  # 生成的 .exe 文件路径
+          asset_path: BabbleApp/dist/windows/babbleapp.exe
           asset_name: babbleapp.exe
           asset_content_type: application/octet-stream
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
