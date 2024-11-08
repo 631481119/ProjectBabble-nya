@@ -29,22 +29,15 @@ jobs:
         run: |
           pyinstaller BabbleApp/babbleapp.py --onefile --distpath BabbleApp/dist/windows
 
-      # 安装 Inno Setup 并获取安装路径
-      - name: Install Inno Setup and Get Path
+      # 安装 Inno Setup 并运行安装包生成
+      - name: Install Inno Setup and Create Installer
         run: |
           choco install innosetup --yes
           $innoPath = (Get-Command "ISCC.exe" -ErrorAction SilentlyContinue).Path
           if (-not $innoPath) {
               throw "Inno Setup ISCC.exe not found after installation."
           }
-          Write-Host "Inno Setup path: $innoPath"
-          $innoPath | Out-File -FilePath inno_path.txt
-
-      # 使用 Inno Setup 生成安装包
-      - name: Create Installer
-        run: |
-          $innoPath = Get-Content inno_path.txt | Select-Object -First 1
-          & $innoPath "installer_script.iss"
+          & "$innoPath" "installer_script.iss"
 
       - name: Create Release
         id: create_release
