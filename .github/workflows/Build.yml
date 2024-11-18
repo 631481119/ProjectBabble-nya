@@ -8,54 +8,18 @@ on:
 
 jobs:
   build:
-    runs-on: windows-latest
+
+    runs-on: ubuntu-latest
 
     steps:
-      - name: Check out code
-        uses: actions/checkout@v2
+    - uses: actions/checkout@v2
 
-      - name: Set up Python
-        uses: actions/setup-python@v2
-        with:
-          python-version: '3.x'
+    - name: Package Application
+      uses: JackMcKew/pyinstaller-action-windows@main
+      with:
+        path: BabbleApp
 
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          pip install pyinstaller
-          pip install -r BabbleApp/requirements.txt
-
-      - name: Package Application
-        run: |
-          pyinstaller BabbleApp/babbleapp.py --onefile --distpath BabbleApp/dist/windows
-
-      # 安装 Inno Setup 并运行安装包生成
-      - name: Install Inno Setup and Create Installer
-        run: |
-          choco install innosetup --yes
-          $innoPath = (Get-Command "ISCC.exe" -ErrorAction SilentlyContinue).Path
-          if (-not $innoPath) {
-              throw "Inno Setup ISCC.exe not found after installation."
-          }
-          & "$innoPath" "installer_script.iss"
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        with:
-          tag_name: v1.0.1
-          release_name: Release v1.0.1
-          draft: false
-          prerelease: false
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload Installer to Release
-        uses: actions/upload-release-asset@v1
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: BabbleApp-Installer.exe  # 安装包文件的路径
-          asset_name: BabbleApp-Installer.exe
-          asset_content_type: application/octet-stream
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - uses: actions/upload-artifact@v4
+      with:
+        name: BabbleApp
+        path: BabbleApp/dist/windows
